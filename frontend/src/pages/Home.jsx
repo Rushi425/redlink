@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import React from "react";
 import { Heart, Users, Droplet, Database } from "lucide-react";
+import React from "react";
 
 const stats = [
   { label: "Lives Saved", value: 5200, icon: <Heart className="text-red-600" size={30} /> },
@@ -25,23 +26,46 @@ const bloodGroupData = [
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
 const Home = () => {
+  const controls = useAnimation();
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollY / maxScroll) * 100;
+      setProgress(scrollPercent);
+      controls.start({ width: `${scrollPercent}%` });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [controls]);
+
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center">
+    <div className="bg-gray-100 min-h-screen flex flex-col items-center relative">
+      {/* Blood Scroll Bar */}
+      <motion.div
+        initial={{ width: "0%" }}
+        animate={controls}
+        className="fixed top-0 left-0 h-2 bg-red-600 z-50"
+      ></motion.div>
+
       {/* Hero Section */}
       <div className="w-full text-center py-16 bg-red-700 text-white">
         <h1 className="text-5xl font-bold">Welcome to RedLink</h1>
         <p className="text-lg mt-3">Connecting blood donors with seekers efficiently.</p>
         <div className="mt-6 flex space-x-6 justify-center">
-          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
-            <Link to="/donor-login" className="bg-white text-red-600 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-100">
-              Become a Donor
-            </Link>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
-            <Link to="/seeker-login" className="bg-gray-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-900">
-              Find Blood
-            </Link>
-          </motion.div>
+          {[ 
+            { label: "Become a Donor", link: "/donor-login", bg: "bg-white", text: "text-red-600", hover: "hover:bg-red-100" },
+            { label: "Find Blood", link: "/seeker-login", bg: "bg-gray-800", text: "text-white", hover: "hover:bg-gray-900" }
+          ].map((btn, index) => (
+            <motion.div key={index} whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
+              <Link to={btn.link} className={`${btn.bg} ${btn.text} font-semibold px-6 py-3 rounded-lg shadow-md ${btn.hover}`}>
+                {btn.label}
+              </Link>
+            </motion.div>
+          ))}
         </div>
       </div>
 
@@ -57,8 +81,18 @@ const Home = () => {
       </div>
 
       {/* Blood Group Availability Section */}
-      <div className="w-full max-w-5xl mt-16 bg-white shadow-lg rounded-lg p-8">
+      <div className="w-full max-w-5xl mt-16 bg-white shadow-lg rounded-lg p-8 relative overflow-hidden">
         <h2 className="text-3xl font-bold text-red-700 text-center mb-6">Blood Group Availability</h2>
+
+        {/* Blood Animation UI */}
+        <motion.div
+          initial={{ height: "0%" }}
+          animate={{ height: `${progress}%` }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="absolute top-0 left-0 w-full bg-red-100 opacity-50"
+          style={{ borderRadius: "10px" }}
+        ></motion.div>
+
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={bloodGroupData}>
             <XAxis dataKey="group" />
@@ -69,8 +103,8 @@ const Home = () => {
         </ResponsiveContainer>
 
         {/* List of Blood Groups */}
-        <div className="mt-8">
-          <h3 className="text-xl font-semibold text-center text-gray-700">Available Blood Groups:</h3>
+        <div className="mt-8 text-center relative z-10">
+          <h3 className="text-xl font-semibold text-gray-700">Available Blood Groups:</h3>
           <div className="flex flex-wrap justify-center mt-3 gap-4">
             {bloodGroups.map((group, index) => (
               <span key={index} className="bg-red-100 text-red-600 px-4 py-2 rounded-lg shadow-sm font-medium">
@@ -80,9 +114,37 @@ const Home = () => {
           </div>
         </div>
       </div>
+      {/* Eligibility to Donate Section */}
+<div className="w-full max-w-5xl mt-16 bg-white shadow-lg rounded-lg p-8">
+  <h2 className="text-3xl font-bold text-red-700 text-center mb-6">Who Can Donate?</h2>
+  <p className="text-gray-700 text-center mb-6">
+    To ensure safety for both donors and recipients, blood donors must meet the following criteria:
+  </p>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {[
+      { title: "Age", description: "Donors must be between 18 and 65 years old." },
+      { title: "Weight", description: "Minimum weight should be 50 kg (110 lbs)." },
+      { title: "Health", description: "Donors should be in good health with no chronic illnesses." },
+      { title: "Gap Between Donations", description: "Minimum 3 months gap between donations." },
+      { title: "Medical Conditions", description: "People with diabetes, hypertension (controlled), and mild anemia can donate." },
+      { title: "Recent Vaccination", description: "Wait at least 14 days after vaccination before donating." }
+    ].map((item, index) => (
+      <div key={index} className="bg-red-50 p-4 rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold text-red-700">{item.title}</h3>
+        <p className="text-gray-600">{item.description}</p>
+      </div>
+    ))}
+  </div>
+
+  <p className="text-center text-gray-700 mt-6">
+    If you meet these criteria, <Link to="/donor-login" className="text-red-600 font-semibold hover:underline">register now</Link> and help save lives!
+  </p>
+</div>
+
 
       {/* Footer Information */}
-      <div className="w-full max-w-5xl mt-10 mb-10 text-center text-gray-700">
+      <div className="w-full max-w-5xl mt-20 mb-10 text-center text-gray-700">
         <p className="text-lg">
           RedLink is committed to making blood donation accessible and saving lives.{" "}
           <Link to="/donor-login" className="text-red-600 font-semibold hover:underline">

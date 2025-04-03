@@ -10,7 +10,7 @@ const Footer = () => {
         
         {/* Left Side - Logo */}
         <div className="flex items-center space-x-3">
-          <img src={logo} alt="RedLink Logo" className="h-20 w-50" />
+          <img src={logo} alt="RedLink Logo" className="ml-5 h-15 w-40" />
         </div>
 
 
