@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { Heart, Users, Droplet, Database } from "lucide-react";
+import { Heart, Users, Droplet, Database, CheckCircle } from "lucide-react";
 import React from "react";
 
+// Stats Data
 const stats = [
   { label: "Lives Saved", value: 5200, icon: <Heart className="text-red-600" size={30} /> },
   { label: "Total Donations", value: 12500, icon: <Droplet className="text-red-600" size={30} /> },
@@ -44,19 +45,20 @@ const Home = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center relative">
-      {/* Blood Scroll Bar */}
+
+      {/* Progress Bar */}
       <motion.div
         initial={{ width: "0%" }}
         animate={controls}
-        className="fixed top-0 left-0 h-2 bg-red-600 z-50"
+        className="fixed top-0 left-0 h-2 bg-gradient-to-r from-red-600 to-red-400 z-50"
       ></motion.div>
 
       {/* Hero Section */}
-      <div className="w-full text-center py-16 bg-red-700 text-white">
+      <div className="w-full text-center py-20 bg-red-700 text-white">
         <h1 className="text-5xl font-bold">Welcome to RedLink</h1>
         <p className="text-lg mt-3">Connecting blood donors with seekers efficiently.</p>
         <div className="mt-6 flex space-x-6 justify-center">
-          {[ 
+          {[
             { label: "Become a Donor", link: "/donor-login", bg: "bg-white", text: "text-red-600", hover: "hover:bg-red-100" },
             { label: "Find Blood", link: "/seeker-login", bg: "bg-gray-800", text: "text-white", hover: "hover:bg-gray-900" }
           ].map((btn, index) => (
@@ -70,9 +72,10 @@ const Home = () => {
       </div>
 
       {/* Statistics Section */}
-      <div className="w-full max-w-5xl mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="w-full max-w-5xl mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <motion.div key={index} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 200 }} className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center space-y-3">
+          <motion.div key={index} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 200 }} 
+            className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center space-y-3">
             {stat.icon}
             <h2 className="text-2xl font-semibold">{stat.value.toLocaleString()}</h2>
             <p className="text-gray-600">{stat.label}</p>
@@ -80,18 +83,9 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Blood Group Availability Section */}
+      {/* Blood Group Availability */}
       <div className="w-full max-w-5xl mt-16 bg-white shadow-lg rounded-lg p-8 relative overflow-hidden">
         <h2 className="text-3xl font-bold text-red-700 text-center mb-6">Blood Group Availability</h2>
-
-        {/* Blood Animation UI */}
-        <motion.div
-          initial={{ height: "0%" }}
-          animate={{ height: `${progress}%` }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute top-0 left-0 w-full bg-red-100 opacity-50"
-          style={{ borderRadius: "10px" }}
-        ></motion.div>
 
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={bloodGroupData}>
@@ -102,8 +96,8 @@ const Home = () => {
           </BarChart>
         </ResponsiveContainer>
 
-        {/* List of Blood Groups */}
-        <div className="mt-8 text-center relative z-10">
+        {/* Available Blood Groups */}
+        <div className="mt-8 text-center">
           <h3 className="text-xl font-semibold text-gray-700">Available Blood Groups:</h3>
           <div className="flex flex-wrap justify-center mt-3 gap-4">
             {bloodGroups.map((group, index) => (
@@ -114,43 +108,32 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* Eligibility to Donate Section */}
-<div className="w-full max-w-5xl mt-16 bg-white shadow-lg rounded-lg p-8">
-  <h2 className="text-3xl font-bold text-red-700 text-center mb-6">Who Can Donate?</h2>
-  <p className="text-gray-700 text-center mb-6">
-    To ensure safety for both donors and recipients, blood donors must meet the following criteria:
-  </p>
-  
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {[
-      { title: "Age", description: "Donors must be between 18 and 65 years old." },
-      { title: "Weight", description: "Minimum weight should be 50 kg (110 lbs)." },
-      { title: "Health", description: "Donors should be in good health with no chronic illnesses." },
-      { title: "Gap Between Donations", description: "Minimum 3 months gap between donations." },
-      { title: "Medical Conditions", description: "People with diabetes, hypertension (controlled), and mild anemia can donate." },
-      { title: "Recent Vaccination", description: "Wait at least 14 days after vaccination before donating." }
-    ].map((item, index) => (
-      <div key={index} className="bg-red-50 p-4 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold text-red-700">{item.title}</h3>
-        <p className="text-gray-600">{item.description}</p>
-      </div>
-    ))}
-  </div>
 
-  <p className="text-center text-gray-700 mt-6">
-    If you meet these criteria, <Link to="/donor-login" className="text-red-600 font-semibold hover:underline">register now</Link> and help save lives!
-  </p>
-</div>
-
-
-      {/* Footer Information */}
-      <div className="w-full max-w-5xl mt-20 mb-10 text-center text-gray-700">
-        <p className="text-lg">
-          RedLink is committed to making blood donation accessible and saving lives.{" "}
-          <Link to="/donor-login" className="text-red-600 font-semibold hover:underline">
-            Join our growing community of donors today!
-          </Link>
+      {/* Who Can Donate Section */}
+      <div className="w-full max-w-5xl mt-16 bg-white shadow-lg rounded-lg p-8">
+        <h2 className="text-3xl font-bold text-red-700 text-center mb-6">Who Can Donate?</h2>
+        <p className="text-gray-700 text-center mb-6">
+          To ensure safety for both donors and recipients, blood donors must meet the following criteria:
         </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            { title: "Age", description: "18 - 65 years old" },
+            { title: "Weight", description: "Minimum 50 kg (110 lbs)" },
+            { title: "Health", description: "No chronic illnesses" },
+            { title: "Gap Between Donations", description: "Minimum 3 months" },
+            { title: "Medical Conditions", description: "Diabetes, controlled hypertension allowed" },
+            { title: "Recent Vaccination", description: "Wait 14 days after vaccination" }
+          ].map((item, index) => (
+            <div key={index} className="bg-red-50 p-4 rounded-lg shadow-md flex items-start space-x-3">
+              <CheckCircle className="text-red-600" size={24} />
+              <div>
+                <h3 className="text-lg font-semibold text-red-700">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
