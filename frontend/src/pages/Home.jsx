@@ -7,10 +7,10 @@ import React from "react";
 
 // Stats Data
 const stats = [
-  { label: "Lives Saved", value: 5200, icon: <Heart className="text-red-600" size={30} /> },
-  { label: "Total Donations", value: 12500, icon: <Droplet className="text-red-600" size={30} /> },
-  { label: "Active Donors", value: 4200, icon: <Users className="text-red-600" size={30} /> },
-  { label: "Requests Fulfilled", value: 7800, icon: <Database className="text-red-600" size={30} /> }
+  { label: "Lives Saved", value: "5200+", icon: <Heart className="text-red-600" size={30} /> },
+  { label: "Total Donations", value: "12500+", icon: <Droplet className="text-red-600" size={30} /> },
+  { label: "Active Donors", value: "4200+", icon: <Users className="text-red-600" size={30} /> },
+  { label: "Requests Fulfilled", value: "7800+", icon: <Database className="text-red-600" size={30} /> }
 ];
 
 const bloodGroupData = [
@@ -60,7 +60,7 @@ const Home = () => {
         <div className="mt-6 flex space-x-6 justify-center">
           {[
             { label: "Become a Donor", link: "/donor-login", bg: "bg-white", text: "text-red-600", hover: "hover:bg-red-100" },
-            { label: "Find Blood", link: "/seeker-login", bg: "bg-gray-800", text: "text-white", hover: "hover:bg-gray-900" }
+            { label: "Find Blood", link: "/find-blood", bg: "bg-gray-800", text: "text-white", hover: "hover:bg-gray-900" }
           ].map((btn, index) => (
             <motion.div key={index} whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
               <Link to={btn.link} className={`${btn.bg} ${btn.text} font-semibold px-6 py-3 rounded-lg shadow-md ${btn.hover}`}>

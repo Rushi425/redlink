@@ -17,22 +17,8 @@ const bloodBankSchema = new mongoose.Schema({
     email: { type: String },
   },
   operatingHours: {
-    open: { type: String, required: true }, // e.g., "09:00 AM"
-    close: { type: String, required: true }, // e.g., "06:00 PM"
-  },
-  bloodStock: {
-    A_positive: { type: Number, default: 0 },
-    A_negative: { type: Number, default: 0 },
-    B_positive: { type: Number, default: 0 },
-    B_negative: { type: Number, default: 0 },
-    O_positive: { type: Number, default: 0 },
-    O_negative: { type: Number, default: 0 },
-    AB_positive: { type: Number, default: 0 },
-    AB_negative: { type: Number, default: 0 },
-  },
-  registeredDate: {
-    type: Date,
-    default: Date.now,
+    open: { type: String, required: true }, 
+    close: { type: String, required: true },
   },
 });
 

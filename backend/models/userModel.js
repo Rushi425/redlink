@@ -1,10 +1,36 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+    //personal details
     fullName: {
         type: String,
         required: true,
         trim: true
+    },
+    gender: {
+        type: String,
+        required: true,
+        enum:['Male', 'Female', 'Other'],
+    },
+    dateOfBirth: {
+        type: Date,
+        required: true,
+    },
+    //Blood Information
+    bloodGroup: {
+        type: String,
+        required: true,
+        enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+    },
+    availability: {
+        type: Boolean,
+        default: true
+    },
+    //contact details
+    phone: {
+        type: String,
+        required: true,
+        unique: true
     },
     email: {
         type: String,
@@ -12,25 +38,11 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true
     },
-    phone: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
+    state: {
         type: String,
         required: true
-    },
-    bloodGroup: {
-        type: String,
-        required: true,
-        enum: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
     },
     city: {
-        type: String,
-        required: true
-    },
-    state: {
         type: String,
         required: true
     },
@@ -38,21 +50,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    availability: {
-        type: Boolean,
-        default: true
+
+    
+    password: {
+        type: String,
+        required: true
     },
-    lastDonationDate: {
-        type: Date,
-        default: null
-    },
-    notifications: [
-        {
-            seekerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Seeker' },
-            message: { type: String },
-            date: { type: Date, default: Date.now }
-        }
-    ]
+    
+    
+    
+    //report photo upload and save in db
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

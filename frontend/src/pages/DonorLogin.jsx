@@ -7,7 +7,7 @@ const DonorLogin = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // Clear error on input change
+    setError(""); 
   };
 
   const handleSubmit = (e) => {

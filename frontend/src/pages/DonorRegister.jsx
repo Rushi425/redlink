@@ -3,92 +3,195 @@ import React, { useState } from "react";
 const DonorRegister = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
+    gender: "",
+    dateOfBirth: "",
     bloodGroup: "",
+    phone: "",
+    email: "",
+    state: "",
+    city: "",
+    pincode: "",
+    password: "",
   });
 
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // Clear error on input change
+    setError("");
+  };
+
+  const calculateAge = (dob) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.email || !formData.bloodGroup) {
-      setError("All fields are required.");
+    const age = calculateAge(formData.dateOfBirth);
+    if (age < 18) {
+      setError("You must be at least 18 years old to register.");
       return;
     }
-    // Handle registration logic (e.g., API call)
-    console.log("Registering donor...", formData);
+
+    // Submit logic (e.g., API call)
+    console.log("Donor Data:", formData);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
         onSubmit={handleSubmit}
+        className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-red-700">
+        <h2 className="text-2xl font-bold text-center mb-6 text-red-600">
           Donor Registration
         </h2>
 
-        {error && <p className="text-red-600 text-sm text-center mb-4">{error}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        <label htmlFor="fullName" className="block text-gray-700 font-medium mb-1">
-          Full Name
-        </label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          placeholder="Enter your full name"
-          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring focus:ring-red-300"
-          required
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-medium">Full Name</label>
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
 
-        <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Enter your email"
-          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring focus:ring-red-300"
-          required
-        />
+          <div>
+            <label className="text-sm font-medium">Gender</label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
-        <label htmlFor="bloodGroup" className="block text-gray-700 font-medium mb-1">
-          Blood Group
-        </label>
-        <select
-          id="bloodGroup"
-          name="bloodGroup"
-          value={formData.bloodGroup}
-          onChange={handleChange}
-          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring focus:ring-red-300"
-          required
-        >
-          <option value="">Select your blood group</option>
-          <option value="A+">A+</option>
-          <option value="A-">A-</option>
-          <option value="B+">B+</option>
-          <option value="B-">B-</option>
-          <option value="O+">O+</option>
-          <option value="O-">O-</option>
-          <option value="AB+">AB+</option>
-          <option value="AB-">AB-</option>
-        </select>
+          <div>
+            <label className="text-sm font-medium">Date of Birth</label>
+            <input
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Blood Group</label>
+            <select
+              name="bloodGroup"
+              value={formData.bloodGroup}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="">Select</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Phone</label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">State</label>
+            <input
+              type="text"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">City</label>
+            <input
+              type="text"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Pincode</label>
+            <input
+              type="text"
+              name="pincode"
+              value={formData.pincode}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+        </div>
 
         <button
           type="submit"
-          className="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition"
+          className="w-full mt-6 bg-red-600 text-white p-3 rounded hover:bg-red-700"
         >
           Register
         </button>
